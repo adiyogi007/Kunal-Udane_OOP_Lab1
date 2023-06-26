@@ -1,0 +1,85 @@
+
+import java.util.Scanner;
+import java.util.Random;
+class Main{
+    public static void main(String[] args) {
+        int choice;
+        System.out.println("Please enter the department from the following");
+        System.out.println("1. Technical \n2. Admin \n3. Human Resource \n4.Legal \n");
+        Scanner sc = new Scanner(System.in);
+        choice=sc.nextInt();
+        Employee employee = new Employee("kunal", "udane");
+        String department;
+        switch (choice) {
+            case 1:
+                department = "tech";
+                break;
+            case 2:
+                department = "admin";
+                break;
+            case 3:
+                department = "hr";
+                break;
+            case 4:
+                department = "legal";
+                break;
+            default:
+                System.out.println("Invalid department choice. Defaulting to Technical.");
+                department = "tech";
+                break;
+        }
+        CredentialService credentialService = new CredentialService();
+        String email = credentialService.generateEmailAddress(employee,department);
+        String password = credentialService.generatePassword();
+
+        // Display the generated credentials
+        credentialService.showCredentials(employee, email, password);
+    }
+}
+
+class CredentialService{
+    private static final String COMPANY_NAME = "abc.com";
+    private static final String PASSWORD_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+    private Random random = new Random();
+    
+     public String generatePassword() {
+        StringBuilder password = new StringBuilder();
+        int passwordLength = 8; 
+        for (int i = 0; i < passwordLength; i++) {
+            int index = random.nextInt(PASSWORD_CHARACTERS.length());
+            password.append(PASSWORD_CHARACTERS.charAt(index));
+        }
+
+        return password.toString();
+    }
+    
+   public String generateEmailAddress(Employee employee,String department) {
+        return employee.getFirstName().toLowerCase() + employee.getLastName().toLowerCase() +
+                "@" + department + "." + COMPANY_NAME;
+    }
+    
+     public void showCredentials(Employee employee, String email, String password) {
+        System.out.println("Dear "+employee.getFirstName()+" your generated credentials are as follows ");
+        System.out.println("Email    ---> " + email);
+        System.out.println("Password ---> " + password);
+    }
+}
+
+class Employee {
+    private String firstName;
+    private String lastName;
+
+    public Employee(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+}
